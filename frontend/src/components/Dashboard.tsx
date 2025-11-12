@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { boardAPI } from '../services/api.ts';
+import { boardAPI, taskAPI } from '../services/api.ts';
 import { useAuth } from '../services/AuthContext.tsx';
 
 interface Board {
@@ -18,15 +18,18 @@ const Dashboard: React.FC = () => {
   const [totalTasks, setTotalTasks] = useState(0);
   const [completedTasks, setCompletedTasks] = useState(0);
   const [activeTasks, setActiveTasks] = useState(0);
-  const { user } = useAuth();
+  const { displayName, anonymousUserId, loading: authLoading } = useAuth();
 
   useEffect(() => {
-    fetchBoards();
-    fetchTaskStats();
-  }, []);
+    if (!authLoading && anonymousUserId) {
+      fetchBoards();
+      fetchTaskStats();
+    }
+  }, [authLoading, anonymousUserId]);
 
   const fetchBoards = async () => {
     try {
+      if (authLoading || !anonymousUserId) return;
       const response = await boardAPI.getBoards();
       setBoards(response.data.boards || []);
     } catch (error) {
@@ -38,6 +41,7 @@ const Dashboard: React.FC = () => {
 
   const fetchTaskStats = async () => {
     try {
+      if (authLoading || !anonymousUserId) return;
       const response = await boardAPI.getBoards();
       const allBoards = response.data.boards || [];
       
@@ -69,6 +73,7 @@ const Dashboard: React.FC = () => {
   const handleCreateBoard = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      if (authLoading || !anonymousUserId) return;
       await boardAPI.createBoard(newBoard);
       setNewBoard({ title: '', description: '' });
       setShowModal(false);
@@ -107,12 +112,20 @@ const Dashboard: React.FC = () => {
     return colors[index % colors.length];
   };
 
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-lg text-gray-600">Loading your workspace...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen">
       {/* Header Section */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-gray-800 mb-2">
-          Welcome back, {user?.first_name || user?.username}! 👋
+          Welcome back, {displayName}! 👋
         </h1>
         <p className="text-gray-600">Here are your boards and projects</p>
       </div>

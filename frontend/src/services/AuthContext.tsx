@@ -1,16 +1,9 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-
-// Generate UUID v4
-const generateUUID = (): string => {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = Math.random() * 16 | 0;
-    const v = c === 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
-};
+import { ensureAnonymousUserId, getAnonymousDisplayName } from './anonymous.ts';
 
 interface AuthContextType {
   anonymousUserId: string;
+  displayName: string;
   loading: boolean;
 }
 
@@ -30,24 +23,19 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [anonymousUserId, setAnonymousUserId] = useState<string>('');
+  const [displayName, setDisplayName] = useState<string>('Guest');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get or create anonymous user ID
-    let userId = localStorage.getItem('anonymous_user_id');
-    
-    if (!userId) {
-      // Generate new UUID for first-time visitor
-      userId = generateUUID();
-      localStorage.setItem('anonymous_user_id', userId);
-    }
-    
+    const userId = ensureAnonymousUserId();
     setAnonymousUserId(userId);
+    setDisplayName(getAnonymousDisplayName(userId));
     setLoading(false);
   }, []);
 
   const value = {
     anonymousUserId,
+    displayName,
     loading,
   };
 

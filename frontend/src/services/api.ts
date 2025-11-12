@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { ensureAnonymousUserId } from './anonymous.ts';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api/v1';
 
@@ -11,7 +12,7 @@ const api = axios.create({
 
 // Add anonymous user ID to requests
 api.interceptors.request.use((config) => {
-  const anonymousUserId = localStorage.getItem('anonymous_user_id');
+  const anonymousUserId = ensureAnonymousUserId();
   if (anonymousUserId) {
     config.headers['X-Anonymous-User-Id'] = anonymousUserId;
   }
