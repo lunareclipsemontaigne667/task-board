@@ -5,7 +5,22 @@ interface WebSocketMessage {
   data: any;
 }
 
+export const resolveWebSocketUrl = (url: string) => {
+  if (url && url !== '') {
+    return url;
+  }
+
+  if (typeof window === 'undefined') {
+    return 'ws://localhost:8080/api/v1/ws';
+  }
+
+  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  const host = window.location.host;
+  return `${protocol}//${host}/api/v1/ws`;
+};
+
 export const useWebSocket = (url: string) => {
+  const resolvedUrl = resolveWebSocketUrl(url);
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [lastMessage, setLastMessage] = useState<WebSocketMessage | null>(null);
@@ -14,7 +29,7 @@ export const useWebSocket = (url: string) => {
   useEffect(() => {
     const connect = () => {
       try {
-        const ws = new WebSocket(url);
+        const ws = new WebSocket(resolvedUrl);
         
         ws.onopen = () => {
           console.log('WebSocket connected');

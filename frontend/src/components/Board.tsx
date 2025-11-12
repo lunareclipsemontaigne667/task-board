@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { taskAPI } from '../services/api.ts';
-import { useWebSocket } from '../hooks/useWebSocket.ts';
+import { resolveWebSocketUrl, useWebSocket } from '../hooks/useWebSocket.ts';
 
 interface Task {
   id: number;
@@ -25,7 +25,10 @@ const Board: React.FC = () => {
     priority: 'medium' as 'low' | 'medium' | 'high',
   });
 
-  const { isConnected, lastMessage } = useWebSocket('ws://localhost:8080/api/v1/ws');
+  const websocketUrl =
+    process.env.REACT_APP_WS_URL ?? resolveWebSocketUrl('');
+
+  const { isConnected, lastMessage } = useWebSocket(websocketUrl);
 
   useEffect(() => {
     fetchTasks();
