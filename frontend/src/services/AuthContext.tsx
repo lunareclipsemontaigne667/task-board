@@ -1,21 +1,16 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { authAPI, userAPI } from './api.ts';
 
-interface User {
-  id: number;
-  email: string;
-  username: string;
-  first_name?: string;
-  last_name?: string;
-  created_at: string;
-  updated_at: string;
-}
+// Generate UUID v4
+const generateUUID = (): string => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+};
 
 interface AuthContextType {
-  user: User | null;
-  login: (email: string, password: string) => Promise<void>;
-  register: (email: string, username: string, password: string, firstName?: string, lastName?: string) => Promise<void>;
-  logout: () => void;
+  anonymousUserId: string;
   loading: boolean;
 }
 
@@ -34,71 +29,25 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [anonymousUserId, setAnonymousUserId] = useState<string>('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      // Try to get user profile from API
-      userAPI.getProfile()
-        .then(response => {
-          setUser(response.data);
-        })
-        .catch(() => {
-          // If API fails, clear token
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    } else {
-      setLoading(false);
+    // Get or create anonymous user ID
+    let userId = localStorage.getItem('anonymous_user_id');
+    
+    if (!userId) {
+      // Generate new UUID for first-time visitor
+      userId = generateUUID();
+      localStorage.setItem('anonymous_user_id', userId);
     }
+    
+    setAnonymousUserId(userId);
+    setLoading(false);
   }, []);
 
-  const login = async (email: string, password: string) => {
-    try {
-      const response = await authAPI.login({ email, password });
-      const { token, user: userData } = response.data;
-      
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(userData));
-      setUser(userData);
-    } catch (error: any) {
-      throw new Error(error.response?.data?.error || 'Login failed');
-    }
-  };
-
-  const register = async (email: string, username: string, password: string, firstName?: string, lastName?: string) => {
-    try {
-      const response = await authAPI.register({ 
-        email, 
-        username, 
-        password, 
-        first_name: firstName, 
-        last_name: lastName 
-      });
-      
-      // After successful registration, automatically log in
-      await login(email, password);
-    } catch (error: any) {
-      throw new Error(error.response?.data?.error || 'Registration failed');
-    }
-  };
-
-  const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    setUser(null);
-  };
-
   const value = {
-    user,
-    login,
-    register,
-    logout,
+    anonymousUserId,
     loading,
   };
 

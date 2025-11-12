@@ -1,20 +1,12 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../services/AuthContext.tsx';
+import { Link } from 'react-router-dom';
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -77,30 +69,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </div>
           </nav>
 
-          {/* User Profile */}
+          {/* Footer */}
           <div className="p-4 border-t border-indigo-500">
-            <div className="flex items-center space-x-3 mb-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-200 to-orange-400 flex items-center justify-center text-white font-bold shadow-lg">
-                {user?.first_name?.charAt(0) || 'U'}
-              </div>
-              {sidebarOpen && (
-                <div className="flex-1">
-                  <p className="font-semibold text-sm">
-                    {user?.first_name || user?.last_name 
-                      ? `${user.first_name || ''} ${user.last_name || ''}`.trim() 
-                      : user?.username}
-                  </p>
-                  <p className="text-xs text-indigo-200">{user?.email}</p>
-                </div>
-              )}
-            </div>
             {sidebarOpen && (
-              <button
-                onClick={handleLogout}
-                className="w-full p-2 bg-red-500 hover:bg-red-600 rounded-lg transition-colors font-medium shadow-md"
-              >
-                Logout
-              </button>
+              <div className="text-center">
+                <p className="text-xs text-indigo-200">
+                  TaskBoard v1.0
+                </p>
+              </div>
             )}
           </div>
         </div>

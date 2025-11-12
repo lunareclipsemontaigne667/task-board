@@ -71,40 +71,27 @@ func main() {
 	// API routes
 	api := router.Group("/api/v1")
 	{
-		// Auth routes
-		auth := api.Group("/auth")
+		// All routes now use anonymous user middleware
+		api.Use(middleware.AnonymousUserMiddleware(db))
+
+		// Board routes
+		boards := api.Group("/boards")
 		{
-			auth.POST("/register", userHandler.Register)
-			auth.POST("/login", userHandler.Login)
+			boards.GET("", boardHandler.GetBoards)
+			boards.POST("", boardHandler.CreateBoard)
+			boards.GET("/:id", boardHandler.GetBoard)
+			boards.PUT("/:id", boardHandler.UpdateBoard)
+			boards.DELETE("/:id", boardHandler.DeleteBoard)
 		}
 
-		// Protected routes
-		protected := api.Group("/")
-		protected.Use(middleware.AuthMiddleware(cfg.JWTSecret))
+		// Task routes
+		tasks := api.Group("/tasks")
 		{
-			// User routes
-			protected.GET("/profile", userHandler.GetProfile)
-			protected.PUT("/profile", userHandler.UpdateProfile)
-
-			// Board routes
-			boards := protected.Group("/boards")
-			{
-				boards.GET("", boardHandler.GetBoards)
-				boards.POST("", boardHandler.CreateBoard)
-				boards.GET("/:id", boardHandler.GetBoard)
-				boards.PUT("/:id", boardHandler.UpdateBoard)
-				boards.DELETE("/:id", boardHandler.DeleteBoard)
-			}
-
-			// Task routes
-			tasks := protected.Group("/tasks")
-			{
-				tasks.GET("/board/:boardId", taskHandler.GetTasks)
-				tasks.POST("/board/:boardId", taskHandler.CreateTask)
-				tasks.GET("/:id", taskHandler.GetTask)
-				tasks.PUT("/:id", taskHandler.UpdateTask)
-				tasks.DELETE("/:id", taskHandler.DeleteTask)
-			}
+			tasks.GET("/board/:boardId", taskHandler.GetTasks)
+			tasks.POST("/board/:boardId", taskHandler.CreateTask)
+			tasks.GET("/:id", taskHandler.GetTask)
+			tasks.PUT("/:id", taskHandler.UpdateTask)
+			tasks.DELETE("/:id", taskHandler.DeleteTask)
 		}
 
 		// WebSocket route
