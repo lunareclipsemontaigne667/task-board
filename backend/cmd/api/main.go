@@ -30,12 +30,10 @@ func main() {
 	}
 
 	// Initialize repositories
-	userRepo := repository.NewUserRepository(db)
 	boardRepo := repository.NewBoardRepository(db)
 	taskRepo := repository.NewTaskRepository(db)
 
 	// Initialize services
-	userService := service.NewUserService(userRepo)
 	boardService := service.NewBoardService(boardRepo)
 	taskService := service.NewTaskService(taskRepo)
 	
@@ -49,7 +47,6 @@ func main() {
 	go hub.Run()
 
 	// Initialize handlers
-	userHandler := handler.NewUserHandler(userService, cfg)
 	boardHandler := handler.NewBoardHandler(boardService)
 	taskHandler := handler.NewTaskHandler(taskService)
 	wsHandler := handler.NewWebSocketHandler(hub)
